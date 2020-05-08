@@ -81,7 +81,8 @@ body, .container {
 .menubar {
     position: relative;
     top: -4px;
-    left: 110px;
+    float: right;
+    left: -10px;
 }
 .menubar * {
     font-size: 14px !important;

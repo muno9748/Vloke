@@ -165,68 +165,34 @@
                 Target.html("&nbsp;")
             }
         });
-        block.on("mousedown", e => {
-            if(isSelected) return;
-            if(!isMouseHovered) return;
-            isMouseClicked = true;
-            isSelected = true;
+        block[0].onmousedown = e => {
             let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
             Target.pos.sX = e.pageX - Target.element.offsetLeft;
             Target.pos.sY = e.pageY - Target.element.offsetTop;
-        });
-        block.on('mousemove', e => {
-            if(!isSelected) return;
-            if(!isMouseClicked) return;
-            let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
-            let $Target = $(Target.element)
-            let x = e.pageX - Target.element.offsetLeft;
-            let y = e.pageY - Target.element.offsetTop;
-            Target.pos.X = parseFloat($Target.css("left").replace("px",""));
-            Target.pos.Y = parseFloat($Target.css("top").replace("px",""));
-            $Target.css("left", `${parseFloat($Target.css("left").replace("px","")) + (x - Target.pos.sX)}px`);
-            $Target.css("top", `${parseFloat($Target.css("top").replace("px","")) + (y - Target.pos.sY)}px`);
-            let count = 0;
-            Vloke.playground.scripts.forEach(script => {
-                if(count != 0) return;
-                let code = script;
-                let tcode = Target;
-                code.pos.X = parseFloat($(code.element).css("left").replace("px",""));
-                code.pos.Y = parseFloat($(code.element).css("top").replace("px",""));
-                tcode.pos.X = parseFloat($(tcode.element).css("left").replace("px",""));
-                tcode.pos.Y = parseFloat($(tcode.element).css("top").replace("px",""));
-                if(code.id == tcode.id) {
-                    return;
-                }
-                $(tcode.element).css('z-index', '2');
-                $(code.element).css('z-index','1');
-                if(!(code.pos.X < tcode.pos.X + 35 && code.pos.X > tcode.pos.X - 35)) {
-                    for(let i = 0; i < Vloke.playground.scripts.length; i++) {
-                        if(Vloke.playground.scripts[i].child == tcode.id) {
-                            Vloke.playground.scripts[i].child = "";
-                        }
+            $(document).on('mousemove', e => {
+                let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
+                let $Target = $(Target.element)
+                let x = e.pageX - Target.element.offsetLeft;
+                let y = e.pageY - Target.element.offsetTop;
+                Target.pos.X = parseFloat($Target.css("left").replace("px",""));
+                Target.pos.Y = parseFloat($Target.css("top").replace("px",""));
+                $Target.css("left", `${parseFloat($Target.css("left").replace("px","")) + (x - Target.pos.sX)}px`);
+                $Target.css("top", `${parseFloat($Target.css("top").replace("px","")) + (y - Target.pos.sY)}px`);
+                let count = 0;
+                Vloke.playground.scripts.forEach(script => {
+                    if(count != 0) return;
+                    let code = script;
+                    let tcode = Target;
+                    code.pos.X = parseFloat($(code.element).css("left").replace("px",""));
+                    code.pos.Y = parseFloat($(code.element).css("top").replace("px",""));
+                    tcode.pos.X = parseFloat($(tcode.element).css("left").replace("px",""));
+                    tcode.pos.Y = parseFloat($(tcode.element).css("top").replace("px",""));
+                    if(code.id == tcode.id) {
+                        return;
                     }
-                    tcode.child = "";
-                    tcode.isFit = false;
-                    tcode.pos.fX = null;
-                    tcode.pos.fY = null;
-                    $('.code').css('box-shadow','none');
-                    return;
-                }
-                if(!(code.pos.Y < tcode.pos.Y + 55 && code.pos.Y > tcode.pos.Y - 55)) {
-                    for(let i = 0; i < Vloke.playground.scripts.length; i++) {
-                        if(Vloke.playground.scripts[i].child == tcode.id) {
-                            Vloke.playground.scripts[i].child = "";
-                        }
-                    }
-                    tcode.child = "";
-                    tcode.isFit = false;
-                    tcode.pos.fX = null;
-                    tcode.pos.fY = null;
-                    $('.code').css('box-shadow','none');
-                    return;
-                }
-                if(code.pos.Y < tcode.pos.Y) {
-                    if(tcode.type.startsWith('def_')) {
+                    $(tcode.element).css('z-index', '2');
+                    $(code.element).css('z-index','1');
+                    if(!(code.pos.X < tcode.pos.X + 35 && code.pos.X > tcode.pos.X - 35)) {
                         for(let i = 0; i < Vloke.playground.scripts.length; i++) {
                             if(Vloke.playground.scripts[i].child == tcode.id) {
                                 Vloke.playground.scripts[i].child = "";
@@ -239,19 +205,7 @@
                         $('.code').css('box-shadow','none');
                         return;
                     }
-                    $(code.element).css('box-shadow','0px 0px 10px 1px yellow');
-                    tcode.pos.isFit = true;
-                    tcode.pos.fX = code.pos.X;
-                    tcode.pos.fY = code.pos.Y + 35;
-                    for(let i = 0; i < Vloke.playground.scripts.length; i++) {
-                        if(Vloke.playground.scripts[i].child == tcode.id) {
-                            Vloke.playground.scripts[i].child = "";
-                        }
-                    }
-                    code.child = tcode.id;
-                    tcode.child = "";
-                } else {
-                    if(code.type.startsWith('def_')) {
+                    if(!(code.pos.Y < tcode.pos.Y + 55 && code.pos.Y > tcode.pos.Y - 55)) {
                         for(let i = 0; i < Vloke.playground.scripts.length; i++) {
                             if(Vloke.playground.scripts[i].child == tcode.id) {
                                 Vloke.playground.scripts[i].child = "";
@@ -264,60 +218,99 @@
                         $('.code').css('box-shadow','none');
                         return;
                     }
-                    $(code.element).css('box-shadow','0px 0px 10px 1px yellow');
-                    tcode.pos.isFit = true;
-                    tcode.pos.fX = code.pos.X;
-                    tcode.pos.fY = code.pos.Y - 35;
-                    tcode.child = code.id;
+                    if(code.pos.Y < tcode.pos.Y) {
+                        if(tcode.type.startsWith('def_')) {
+                            for(let i = 0; i < Vloke.playground.scripts.length; i++) {
+                                if(Vloke.playground.scripts[i].child == tcode.id) {
+                                    Vloke.playground.scripts[i].child = "";
+                                }
+                            }
+                            tcode.child = "";
+                            tcode.isFit = false;
+                            tcode.pos.fX = null;
+                            tcode.pos.fY = null;
+                            $('.code').css('box-shadow','none');
+                            return;
+                        }
+                        $(code.element).css('box-shadow','0px 0px 10px 1px yellow');
+                        tcode.pos.isFit = true;
+                        tcode.pos.fX = code.pos.X;
+                        tcode.pos.fY = code.pos.Y + 35;
+                        for(let i = 0; i < Vloke.playground.scripts.length; i++) {
+                            if(Vloke.playground.scripts[i].child == tcode.id) {
+                                Vloke.playground.scripts[i].child = "";
+                            }
+                        }
+                        code.child = tcode.id;
+                        tcode.child = "";
+                    } else {
+                        if(code.type.startsWith('def_')) {
+                            for(let i = 0; i < Vloke.playground.scripts.length; i++) {
+                                if(Vloke.playground.scripts[i].child == tcode.id) {
+                                    Vloke.playground.scripts[i].child = "";
+                                }
+                            }
+                            tcode.child = "";
+                            tcode.isFit = false;
+                            tcode.pos.fX = null;
+                            tcode.pos.fY = null;
+                            $('.code').css('box-shadow','none');
+                            return;
+                        }
+                        $(code.element).css('box-shadow','0px 0px 10px 1px yellow');
+                        tcode.pos.isFit = true;
+                        tcode.pos.fX = code.pos.X;
+                        tcode.pos.fY = code.pos.Y - 35;
+                        tcode.child = code.id;
+                        for(let i = 0; i < Vloke.playground.scripts.length; i++) {
+                            if(Vloke.playground.scripts[i].child == tcode.id) {
+                                Vloke.playground.scripts[i].child = "";
+                            }
+                        }
+                    }
+                    count++;
+                });
+            });
+            block.on('mouseup', _e => {
+                $(document).unbind('mousemove');
+                block.unbind('mouseup');
+                $('.code').css('box-shadow','none');
+                $('.code').each((__,block) => {
+                    block = $(block)
+                    let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
+                    let $Target = $(Target.element);
+                    $Target.css("left", `${Target.pos.X}px`);
+                    $Target.css("top", `${Target.pos.Y}px`);
+                    if(Target.pos.isFit && Target.pos.fX && Target.pos.fY) {
+                        $Target.css("left", `${Target.pos.fX}px`);
+                        $Target.css("top", `${Target.pos.fY}px`);
+                    }
+                });
+                let count = 0;
+                Vloke.playground.scripts.forEach(script => {
+                    let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
+                    let code = script;
+                    let tcode = Target;
+                    code.pos.X = parseFloat($(code.element).css("left").replace("px",""));
+                    code.pos.Y = parseFloat($(code.element).css("top").replace("px",""));
+                    tcode.pos.X = parseFloat($(tcode.element).css("left").replace("px",""));
+                    tcode.pos.Y = parseFloat($(tcode.element).css("top").replace("px",""));
+                    if(code == tcode) return;
+                    if(code.pos.Y == tcode.pos.Y - 35) return;
+                    if(code.pos.Y == tcode.pos.Y + 35) return;
+                    ++count;
+                });
+                let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
+                if(count == Vloke.playground.scripts.length - 1) {
+                    Target.child = "";
                     for(let i = 0; i < Vloke.playground.scripts.length; i++) {
-                        if(Vloke.playground.scripts[i].child == tcode.id) {
+                        if(Vloke.playground.scripts[i].child == Target.id) {
                             Vloke.playground.scripts[i].child = "";
                         }
                     }
                 }
-                count++;
             });
-        });
-        block.on('mouseup', _e => {
-            if(!isMouseHovered) return;
-            isMouseClicked = false;
-            isSelected = false;
-            $('.code').css('box-shadow','none');
-            $('.code').each((__,block) => {
-                block = $(block)
-                let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
-                let $Target = $(Target.element);
-                $Target.css("left", `${Target.pos.X}px`);
-                $Target.css("top", `${Target.pos.Y}px`);
-                if(Target.pos.isFit && Target.pos.fX && Target.pos.fY) {
-                    $Target.css("left", `${Target.pos.fX}px`);
-                    $Target.css("top", `${Target.pos.fY}px`);
-                }
-            });
-            let count = 0;
-            Vloke.playground.scripts.forEach(script => {
-                let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
-                let code = script;
-                let tcode = Target;
-                code.pos.X = parseFloat($(code.element).css("left").replace("px",""));
-                code.pos.Y = parseFloat($(code.element).css("top").replace("px",""));
-                tcode.pos.X = parseFloat($(tcode.element).css("left").replace("px",""));
-                tcode.pos.Y = parseFloat($(tcode.element).css("top").replace("px",""));
-                if(code == tcode) return;
-                if(code.pos.Y == tcode.pos.Y - 35) return;
-                if(code.pos.Y == tcode.pos.Y + 35) return;
-                ++count;
-            });
-            let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
-            if(count == Vloke.playground.scripts.length - 1) {
-                Target.child = "";
-                for(let i = 0; i < Vloke.playground.scripts.length; i++) {
-                    if(Vloke.playground.scripts[i].child == Target.id) {
-                        Vloke.playground.scripts[i].child = "";
-                    }
-                }
-            }
-        });
+        };
     }
     $(".code").each((__,block) => {
         block = $(block);
