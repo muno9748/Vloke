@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vloke</title>
+        <link rel="stylesheet" href="/public/ws/default.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="playground row">
+                <div class="blockMenu col-5">
+                    <div class="Header">
+                        <a href="/"><img src="/public/images/logo.png" class="logo"></a>
+                        <div class="btn-group menubar" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-default btn-primary projectSave">Save</button>
+                            <button type="button" class="btn btn-default btn-primary projectLoad">Load</button>
+                            <button type="button" class="btn btn-default btn-primary loadExtension">Extension</button>
+                        </div>
+                    </div>
+                    <div class="article">
+
+                    </div>
+                    <div class="footer row">
+                        <div class="col-sm">
+                            <button type="button" class="btn btn-primary btn-footer">
+                                <svg class="svg-icon" viewBox="0 0 20 20">
+                                    <path d="M18.175,4.142H1.951C1.703,4.142,1.5,4.344,1.5,4.592v10.816c0,0.247,0.203,0.45,0.451,0.45h16.224c0.247,0,0.45-0.203,0.45-0.45V4.592C18.625,4.344,18.422,4.142,18.175,4.142 M4.655,14.957H2.401v-1.803h2.253V14.957zM4.655,12.254H2.401v-1.803h2.253V12.254z M4.655,9.549H2.401V7.747h2.253V9.549z M4.655,6.846H2.401V5.043h2.253V6.846zM14.569,14.957H5.556V5.043h9.013V14.957z M17.724,14.957h-2.253v-1.803h2.253V14.957z M17.724,12.254h-2.253v-1.803h2.253V12.254zM17.724,9.549h-2.253V7.747h2.253V9.549z M17.724,6.846h-2.253V5.043h2.253V6.846z"></path>
+                                </svg>
+                                장면
+                            </button>
+                        </div>
+                        <div class="col-sm">
+                            <button type="button" class="btn btn-primary btn-footer">
+                                <svg class="svg-icon" viewBox="0 0 20 20">
+                                    <path d="M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z"></path>
+                                </svg>
+                                블록
+                            </button>
+                        </div>
+                        <div class="col-sm">
+                            <button type="button" class="btn btn-primary btn-footer">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M10.97 8.265a1.45 1.45 0 00-.487.57.75.75 0 01-1.341-.67c.2-.402.513-.826.997-1.148C10.627 6.69 11.244 6.5 12 6.5c.658 0 1.369.195 1.934.619a2.45 2.45 0 011.004 2.006c0 1.033-.513 1.72-1.027 2.215-.19.183-.399.358-.579.508l-.147.123a4.329 4.329 0 00-.435.409v1.37a.75.75 0 11-1.5 0v-1.473c0-.237.067-.504.247-.736.22-.28.486-.517.718-.714l.183-.153.001-.001c.172-.143.324-.27.47-.412.368-.355.569-.676.569-1.136a.953.953 0 00-.404-.806C12.766 8.118 12.384 8 12 8c-.494 0-.814.121-1.03.265zM13 17a1 1 0 11-2 0 1 1 0 012 0z"></path><path fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path>
+                                </svg>
+                                변수
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="ws col-7"></div>
+            </div>
+        </div>
+        <script src="//code.jquery.com/jquery-3.5.0.min.js"></script>
+        <script src="/public/ws/Vloke.js"></script>
+    </body>
+</html>

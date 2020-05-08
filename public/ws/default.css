@@ -1,0 +1,163 @@
+@font-face {
+    font-family: 'GmarketSansLight'; 
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); 
+    font-weight: normal; 
+    font-style: normal; 
+}
+* {
+    font-family: 'GmarketSansLight' !important;
+}
+body, .container {
+    margin: 0px !important;
+}
+.code {
+    height: 35px;
+    width: fit-content;
+    padding-right: 12px;
+    background: cornflowerblue;
+    border: 1px #4fa7ff solid;
+    border-radius: 10px 0px 10px 0px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+}
+.code:hover {
+    filter: brightness(1.05);
+    -webkit-filter: brightness(1.05);
+    -moz-filter: brightness(1.05);
+    -o-filter: brightness(1.05);
+    -ms-filter: brightness(1.05);
+}
+.code span {
+    font-family: 'GmarketSansLight';
+    font-size: 17px;
+    position: relative;
+    top: 6px;
+    left: 4px;
+    color: white;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -ms-user-select: none;
+}
+.textField {
+    background: royalblue;
+    border-radius: 10px;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: relative;
+    top: 3px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+.blockMenu {
+    height: 100vh;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: #fafafa;
+    border-radius: 0px 0px 20px 0px;
+    box-shadow: 0px 0px 10px 10px #f0f0f0;
+}
+.blockMenu .Header {
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-top: -10px;
+    padding: 10px;
+    box-shadow: 0px 0px 10px 10px #e6e6e6;
+    height: 50px;
+    border-radius: 0px 0px 20px 20px;
+}
+.blockMenu .Header .logo {
+    width: 100px;
+}
+.btn-default {
+    background-color: cornflowerblue !important;
+    border-color: cornflowerblue !important;
+}
+.menubar {
+    position: relative;
+    top: -4px;
+    left: 110px;
+}
+.menubar * {
+    font-size: 14px !important;
+}
+.blockMenu .footer {
+    height: 70px;
+    position: relative;
+    border-radius: 0px 0px 20px 0px;
+    margin-left: -15px;
+    margin-right: -15px;
+    border-top: 1px grey solid;
+    box-shadow: 0px 0px 20px 4px #e6e6e6;
+}
+.blockMenu .article {
+    height: calc(100% - 100px);
+}
+.blockMenu .footer .col-sm button {
+    width: 100%;
+    height: 70px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+.blockMenu .footer .col-sm button svg {
+    width: 40px;
+}
+.blockMenu .footer .col-sm button svg path {
+    fill: black;
+}
+.blockMenu .footer .col-sm {
+    padding: 0px !important;
+}
+.btn-footer {
+    background: transparent !important;
+    border-color: lightgrey !important;
+    border-radius: 0px !important;
+}
+.btn-footer:hover {
+    box-shadow: none !important;
+}
+.btn-footer:focus {
+    box-shadow: none !important;
+}
+.indicator {
+    width: 25px;
+    position: relative;
+    top: 1px;
+}
+canvas.vlokeEngine {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 10px #f0f0f0;
+}
+.blockMenu .article .objects {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 10px #f0f0f0;
+    height: calc(100% - 243px);
+    background: transparent;
+    padding: 10px;
+    overflow-y: auto;
+}
+.blockMenu .article .objects li {
+    background: transparent;
+    display: flex;
+}
+.blockMenu .article .objects li div.image {
+    background: whitesmoke;
+    width: 50px;
+    height: 50px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 1px #e6e6e6;
+    margin-right: 15px;
+}
