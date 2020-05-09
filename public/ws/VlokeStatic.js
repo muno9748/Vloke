@@ -22,6 +22,7 @@ const VlokeStatic = {
             events: {
                 event: false
             },
+            skeleton: 'basic',
             params: [{
                 name: 'INDICATOR',
                 default: 'test_icon',
@@ -44,6 +45,7 @@ const VlokeStatic = {
                 darken: '#1b9e41',
                 text: '#ffffff'
             },
+            skeleton: 'event',
             events: {
                 event: true,
                 eventName: 'when_start',
@@ -81,7 +83,7 @@ const VlokeStatic = {
             splited = splited.map((el,i) => {
                 return [`<span>${el[0]}</span>`,(() => {
                     if(el[3] == 'text') {
-                        return `<span class="textField" contenteditable="true" id="textField_${el[2]}">${el[1]}</span>`;
+                        return `<span class="textField" contenteditable="true" spellcheck="false" id="textField_${el[2]}">${el[1]}</span>`;
                     }
                     if(el[3] == 'indicator') {
                         return `<span><img src="/public/images/${el[1]}.svg" id="indicator_${el[2]}" class="indicator" /></span>`;
@@ -98,6 +100,9 @@ const VlokeStatic = {
         }
         return `
             <div class="code" id="Block_${block.id}">
+            <svg class="skeleton">
+                <path d="m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l 0 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l -0 0 l -5 5 l -5 -5 l -5 0 l 0 30"></path>
+            </svg>
                 ${content.join("\n")}
             </div>
         `;
@@ -129,11 +134,41 @@ const VlokeStatic = {
             this.events = VlokeStatic.BlockData[type].events;
             $('.playground .ws').prepend(VlokeStatic.BlockHTMLTemplate(this));
             this.element = $(`#Block_${this.id}`)[0];
+            this.skeleton = VlokeStatic.BlockData[type].skeleton;
             this.$element = $(this.element);
-            this.$element.css('background',VlokeStatic.BlockData[type].color.default);
-            this.$element.css('border',`1px ${VlokeStatic.BlockData[type].color.darken} solid`);
+            this.$element.find('.textField').css('background', VlokeStatic.BlockData[type].color.field);
+            this.eSkeleton = $(`#Block_${this.id}`).children('svg.skeleton')[0];
+            this.$eSkeleton = $(this.eSkeleton);
+            this.path = this.$eSkeleton.children('path')[0];
+            this.$path = $(this.path);
+            this.$path.css('fill',VlokeStatic.BlockData[type].color.default);
+            this.$path.css('stroke',VlokeStatic.BlockData[type].color.darken);
             this.$element.css('color',VlokeStatic.BlockData[type].color.text);
-            this.$element.find('.textField').css('background', VlokeStatic.BlockData[type].color.field)
+            this.updateSkeleton = () => {
+                switch(this.skeleton) {
+                    case 'basic':
+                        this.$eSkeleton.css('width',this.$element.width() + 20);
+                        this.$path.attr('d',
+                            `m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l ${
+                                this.$element.width() - 20
+                            } 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l ${
+                                -1 * (this.$element.width() - 20)
+                            } 0 l -5 5 l -5 -5 l -5 0 l 0 30`
+                        );
+                        break;
+                    case 'event':
+                        this.$eSkeleton.css('width',this.$element.width() + 20);
+                        this.$path.attr('d',
+                            `m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l ${
+                                this.$element.width() - 20
+                            } 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l ${
+                                -1 * (this.$element.width() - 20)
+                            } 0 l -5 0 l -5 0 l -5 0 l 0 30`
+                        );
+                        break;
+                }
+            };
+            this.updateSkeleton();
             Vloke.playground.scripts.push(this);
         }
     },

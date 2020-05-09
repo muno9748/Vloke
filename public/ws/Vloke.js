@@ -11,6 +11,7 @@
                 }
             }
         },
+        Mutate: {},
         engine: {},
         event: {}
     };
@@ -28,6 +29,74 @@
         Execute() {
             this.block.Execute(this);
         }
+    }
+    Vloke.Mutate.mutate = (block) => {
+        let index = Vloke.playground.scripts.indexOf(Vloke.playground.scripts.find(el => el == block));
+        let BlockSchema_ = class {
+            constructor(type) {
+                this.type = type;
+                this.id = VlokeStatic.Utils.generateId();
+                this.params = (() => {
+                    let returnvalue = {};
+                    VlokeStatic.BlockData[type].params.forEach(el => {
+                        returnvalue[el.id] = {value:el.default,name:el.name};
+                    });
+                    returnvalue.length = Object.keys(returnvalue).length;
+                    return returnvalue;
+                })();
+                this.child = "";
+                this.element = null;
+                this.Execute = VlokeStatic.BlockData[type].Execute;
+                this.pos = {
+                    sX: 0,
+                    sY: 0,
+                    X: 0,
+                    Y: 0,
+                    isFit: false,
+                    fX: 0,
+                    fY: 0
+                };
+                this.events = VlokeStatic.BlockData[type].events;
+                $('.playground .ws').prepend(VlokeStatic.BlockHTMLTemplate(this));
+                this.element = $(`#Block_${this.id}`)[0];
+                this.skeleton = VlokeStatic.BlockData[type].skeleton;
+                this.$element = $(this.element);
+                this.$element.find('.textField').css('background', VlokeStatic.BlockData[type].color.field);
+                this.eSkeleton = $(`#Block_${this.id}`).children('svg.skeleton')[0];
+                this.$eSkeleton = $(this.eSkeleton);
+                this.path = this.$eSkeleton.children('path')[0];
+                this.$path = $(this.path);
+                this.$path.css('fill',VlokeStatic.BlockData[type].color.default);
+                this.$path.css('stroke',VlokeStatic.BlockData[type].color.darken);
+                this.$element.css('color',VlokeStatic.BlockData[type].color.text);
+                this.updateSkeleton = () => {
+                    switch(this.skeleton) {
+                        case 'basic':
+                            this.$eSkeleton.css('width',this.$element.width() + 20);
+                            this.$path.attr('d',
+                                `m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l ${
+                                    this.$element.width() - 20
+                                } 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l ${
+                                    -1 * (this.$element.width() - 20)
+                                } 0 l -5 5 l -5 -5 l -5 0 l 0 30`
+                            );
+                            break;
+                        case 'event':
+                            this.$eSkeleton.css('width',this.$element.width() + 20);
+                            this.$path.attr('d',
+                                `m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l ${
+                                    this.$element.width() - 20
+                                } 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l ${
+                                    -1 * (this.$element.width() - 20)
+                                } 0 l -5 0 l -5 0 l -5 0 l 0 30`
+                            );
+                            break;
+                    }
+                };
+                this.updateSkeleton();
+            }
+        }
+        Vloke.playground.scripts[index] = new BlockSchema_(block.type);
     }
     Vloke.playground.blockMenu.currentTab = 'play';
     Vloke.playground.blockMenu.Tabs = ['play', 'blocks', 'variables'];
@@ -144,26 +213,18 @@
     new VlokeStatic.BlockSchema('def_when_start');
     new VlokeStatic.BlockSchema('print');
     new VlokeStatic.BlockSchema('def_when_start');
-    let isSelected;
-    let isMouseClicked = false;
-    let isMouseHovered = false;
     const registerDragEvent = (block) => {
-        block.on("mouseenter", () => {
-            isMouseHovered = true;
-        });
-        block.on("mouseleave", () => {
-            isMouseHovered = false;
-        });
         block.find('.textField').on('input', e => {
             let Target = $(e.target);
-            if(Target.text().indexOf("\n") != -1) {
-                Target[0].innerText = (Target.text().replace(/\n/gi, ''));
+            if(Target.html().indexOf("<br>") != -1) {
+                Target[0].innerText = (Target.html().replace(/\<br\>/gi, ''));
             }
             let elem = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
             elem.params[Target.attr('id').replace('textField_','')] = {value:Target.text(),name:elem.params[Target.attr('id').replace('textField_','')].name};
             if(Target.text().trim() == "") {
                 Target.html("&nbsp;")
             }
+            Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_','')).updateSkeleton();
         });
         block[0].onmousedown = e => {
             let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
@@ -202,10 +263,12 @@
                         tcode.isFit = false;
                         tcode.pos.fX = null;
                         tcode.pos.fY = null;
-                        $('.code').css('box-shadow','none');
+                        $('.code').each((i,el__) => {
+                            $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
+                        });
                         return;
                     }
-                    if(!(code.pos.Y < tcode.pos.Y + 55 && code.pos.Y > tcode.pos.Y - 55)) {
+                    if(!(code.pos.Y < tcode.pos.Y + 45 && code.pos.Y > tcode.pos.Y - 45)) {
                         for(let i = 0; i < Vloke.playground.scripts.length; i++) {
                             if(Vloke.playground.scripts[i].child == tcode.id) {
                                 Vloke.playground.scripts[i].child = "";
@@ -215,7 +278,9 @@
                         tcode.isFit = false;
                         tcode.pos.fX = null;
                         tcode.pos.fY = null;
-                        $('.code').css('box-shadow','none');
+                        $('.code').each((i,el__) => {
+                            $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
+                        });
                         return;
                     }
                     if(code.pos.Y < tcode.pos.Y) {
@@ -229,13 +294,15 @@
                             tcode.isFit = false;
                             tcode.pos.fX = null;
                             tcode.pos.fY = null;
-                            $('.code').css('box-shadow','none');
+                            $('.code').each((i,el__) => {
+                                $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
+                            });
                             return;
                         }
-                        $(code.element).css('box-shadow','0px 0px 10px 1px yellow');
+                        code.eSkeleton.style.setProperty('filter', 'drop-shadow(0px 0px 5px yellow)');
                         tcode.pos.isFit = true;
                         tcode.pos.fX = code.pos.X;
-                        tcode.pos.fY = code.pos.Y + 35;
+                        tcode.pos.fY = code.pos.Y + 30;
                         for(let i = 0; i < Vloke.playground.scripts.length; i++) {
                             if(Vloke.playground.scripts[i].child == tcode.id) {
                                 Vloke.playground.scripts[i].child = "";
@@ -254,13 +321,15 @@
                             tcode.isFit = false;
                             tcode.pos.fX = null;
                             tcode.pos.fY = null;
-                            $('.code').css('box-shadow','none');
+                            $('.code').each((i,el__) => {
+                                $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
+                            });
                             return;
                         }
-                        $(code.element).css('box-shadow','0px 0px 10px 1px yellow');
+                        code.eSkeleton.style.setProperty('filter', 'drop-shadow(0px 0px 5px yellow)');
                         tcode.pos.isFit = true;
                         tcode.pos.fX = code.pos.X;
-                        tcode.pos.fY = code.pos.Y - 35;
+                        tcode.pos.fY = code.pos.Y - 30;
                         tcode.child = code.id;
                         for(let i = 0; i < Vloke.playground.scripts.length; i++) {
                             if(Vloke.playground.scripts[i].child == tcode.id) {
@@ -274,10 +343,12 @@
             block.on('mouseup', _e => {
                 $(document).unbind('mousemove');
                 block.unbind('mouseup');
-                $('.code').css('box-shadow','none');
-                $('.code').each((__,block) => {
-                    block = $(block)
-                    let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
+                $('.code').each((i,el__) => {
+                    $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
+                });
+                $('.code').each((__,_block) => {
+                    _block = $(_block)
+                    let Target = Vloke.playground.scripts.find(el => el.id == _block.attr('id').replace('Block_',''));
                     let $Target = $(Target.element);
                     $Target.css("left", `${Target.pos.X}px`);
                     $Target.css("top", `${Target.pos.Y}px`);
@@ -296,8 +367,8 @@
                     tcode.pos.X = parseFloat($(tcode.element).css("left").replace("px",""));
                     tcode.pos.Y = parseFloat($(tcode.element).css("top").replace("px",""));
                     if(code == tcode) return;
-                    if(code.pos.Y == tcode.pos.Y - 35) return;
-                    if(code.pos.Y == tcode.pos.Y + 35) return;
+                    if(code.pos.Y == tcode.pos.Y - 30) return;
+                    if(code.pos.Y == tcode.pos.Y + 30) return;
                     ++count;
                 });
                 let Target = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));

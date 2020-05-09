@@ -14,8 +14,6 @@ body, .container {
     height: 35px;
     width: fit-content;
     padding-right: 12px;
-    background: cornflowerblue;
-    border: 1px #4fa7ff solid;
     border-radius: 10px 0px 10px 0px;
     position: absolute;
     left: 0;
@@ -34,7 +32,7 @@ body, .container {
     font-family: 'GmarketSansLight';
     font-size: 17px;
     position: relative;
-    top: 6px;
+    top: 3px;
     left: 4px;
     color: white;
     user-select: none;
@@ -161,4 +159,9 @@ canvas.vlokeEngine {
     border-radius: 10px;
     box-shadow: 0px 0px 10px 1px #e6e6e6;
     margin-right: 15px;
+}
+.skeleton {
+    width: 0px;
+    height: 35px;
+    position: absolute;
 }

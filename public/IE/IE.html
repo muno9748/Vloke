@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vloke - Not Supported</title>
+        <style>
+            @font-face {
+                font-family: 'GmarketSansLight'; 
+                src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); 
+                font-weight: normal; 
+                font-style: normal; 
+            }
+            * {
+                font-family: 'GmarketSansLight' !important;
+            }
+            body {
+                background-image: url(/public/images/browserNotSupported.png);
+                background-color: black;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position-y: top;
+            }
+        </style>
+    </head>
+    <body>
+        <span class="oops">OOPS</span>
+        <script>
+            // Internet Explorer 6-11
+            var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+            // Edge 20+
+            var isEdge = !isIE && !!window.StyleMedia;
+
+            // Chrome 1 - 79
+            var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+
+            // Edge (based on chromium) detection
+            var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
+
+            if(!((isIE || isEdge) && (!isChrome && !isEdgeChromium))) {
+                window.location.href = "/";
+            }
+        </script>
+    </body>
+</html>
