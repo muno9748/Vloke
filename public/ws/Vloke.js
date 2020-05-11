@@ -11,7 +11,6 @@
                 }
             }
         },
-        Mutate: {},
         engine: {},
         event: {}
     };
@@ -183,6 +182,23 @@
                     if(code.id == tcode.id) {
                         return;
                     }
+                    tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
+                    if(code.id == tcode.child) {
+                        for(let i = 0; i < Vloke.playground.scripts.length; i++) {
+                            if(Vloke.playground.scripts[i].child == tcode.id) {
+                                Vloke.playground.scripts[i].child = "";
+                            }
+                        }
+                        tcode.child = "";
+                        tcode.isFit = false;
+                        tcode.pos.fX = null;
+                        tcode.pos.fY = null;
+                        $('.code').each((i,el__) => {
+                            $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
+                        });
+                        tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
+                        return;
+                    }
                     $(tcode.element).css('z-index', '2');
                     $(code.element).css('z-index','1');
                     if(!(code.pos.X < tcode.pos.X + 35 && code.pos.X > tcode.pos.X - 35)) {
@@ -198,6 +214,7 @@
                         $('.code').each((i,el__) => {
                             $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
                         });
+                        tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
                         return;
                     }
                     if(!(code.pos.Y < tcode.pos.Y + 45 && code.pos.Y > tcode.pos.Y - 45)) {
@@ -213,6 +230,7 @@
                         $('.code').each((i,el__) => {
                             $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
                         });
+                        tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
                         return;
                     }
                     if(code.pos.Y < tcode.pos.Y) {
@@ -229,6 +247,7 @@
                             $('.code').each((i,el__) => {
                                 $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
                             });
+                            tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
                             return;
                         }
                         code.eSkeleton.style.setProperty('filter', 'drop-shadow(0px 0px 5px yellow)');
@@ -242,6 +261,7 @@
                         }
                         code.child = tcode.id;
                         tcode.child = "";
+                        tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
                     } else {
                         if(code.type.startsWith('def_')) {
                             for(let i = 0; i < Vloke.playground.scripts.length; i++) {
@@ -256,6 +276,7 @@
                             $('.code').each((i,el__) => {
                                 $(el__).children('svg.skeleton')[0].style.removeProperty('filter');
                             });
+                            tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
                             return;
                         }
                         code.eSkeleton.style.setProperty('filter', 'drop-shadow(0px 0px 5px yellow)');
@@ -269,6 +290,7 @@
                             }
                         }
                     }
+                    tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
                     count++;
                 });
             });
@@ -282,11 +304,21 @@
                     _block = $(_block)
                     let Target = Vloke.playground.scripts.find(el => el.id == _block.attr('id').replace('Block_',''));
                     let $Target = $(Target.element);
-                    $Target.css("left", `${Target.pos.X}px`);
-                    $Target.css("top", `${Target.pos.Y}px`);
                     if(Target.pos.isFit && Target.pos.fX && Target.pos.fY) {
                         $Target.css("left", `${Target.pos.fX}px`);
                         $Target.css("top", `${Target.pos.fY}px`);
+                        Target.pos.X = Target.pos.fX;
+                        Target.pos.Y = Target.pos.fY;
+                        Target.pos.isFit = false;
+                        Target.pos.fX = null;
+                        Target.pos.fY = null;
+                        (() => {
+                            let tcode = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
+                            tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
+                        })();
+                    } else {
+                        $Target.css("left", `${Target.pos.X}px`);
+                        $Target.css("top", `${Target.pos.Y}px`);
                     }
                 });
                 let count = 0;
@@ -298,6 +330,7 @@
                     code.pos.Y = parseFloat($(code.element).css("top").replace("px",""));
                     tcode.pos.X = parseFloat($(tcode.element).css("left").replace("px",""));
                     tcode.pos.Y = parseFloat($(tcode.element).css("top").replace("px",""));
+                    tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
                     if(code == tcode) return;
                     if(code.pos.Y == tcode.pos.Y - 30) return;
                     if(code.pos.Y == tcode.pos.Y + 30) return;
@@ -312,6 +345,10 @@
                         }
                     }
                 }
+                (() => {
+                    let tcode = Vloke.playground.scripts.find(el => el.id == block.attr('id').replace('Block_',''));
+                    tcode.moveChilds(tcode.child,tcode.pos.X,tcode.pos.Y);
+                })();
             });
         };
     }

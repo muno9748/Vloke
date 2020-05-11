@@ -144,32 +144,69 @@ const VlokeStatic = {
             this.$path.css('fill',VlokeStatic.BlockData[type].color.default);
             this.$path.css('stroke',VlokeStatic.BlockData[type].color.darken);
             this.$element.css('color',VlokeStatic.BlockData[type].color.text);
-            this.updateSkeleton = () => {
-                switch(this.skeleton) {
-                    case 'basic':
-                        this.$eSkeleton.css('width',this.$element.width() + 20);
-                        this.$path.attr('d',
-                            `m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l ${
-                                this.$element.width() - 20
-                            } 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l ${
-                                -1 * (this.$element.width() - 20)
-                            } 0 l -5 5 l -5 -5 l -5 0 l 0 30`
-                        );
-                        break;
-                    case 'event':
-                        this.$eSkeleton.css('width',this.$element.width() + 20);
-                        this.$path.attr('d',
-                            `m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l ${
-                                this.$element.width() - 20
-                            } 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l ${
-                                -1 * (this.$element.width() - 20)
-                            } 0 l -5 0 l -5 0 l -5 0 l 0 30`
-                        );
-                        break;
-                }
-            };
             this.updateSkeleton();
             Vloke.playground.scripts.push(this);
+        }
+
+        updateSkeleton() {
+            switch(this.skeleton) {
+                case 'basic':
+                    this.$eSkeleton.css('width',this.$element.width() + 25);
+                    this.$path.attr('d',
+                        `m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l ${
+                            this.$element.width() - 25
+                        } 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l ${
+                            -1 * (this.$element.width() - 25)
+                        } 0 l -5 5 l -5 -5 l -5 0 l 0 30`
+                    );
+                    break;
+                case 'event':
+                    this.$eSkeleton.css('width',this.$element.width() + 25);
+                    this.$path.attr('d',
+                        `m 0 30 l 5 0 l 5 5 l 5 -5 l 0 0 l ${
+                            this.$element.width() - 25
+                        } 0 a 15 15 0 0 0 15 -15 a 15 15 0 0 0 -15 -15 l ${
+                            -1 * (this.$element.width() - 25)
+                        } 0 l -5 0 l -5 0 l -5 0 l 0 30`
+                    );
+                    break;
+            }
+        }
+
+        moveChilds(id,x,y) {
+            if(id == "") return;
+            let Obj = Vloke.playground.scripts.find(el => el.id == id);
+            Obj.pos.X = x;
+            Obj.pos.Y = y + 30;
+            Obj.$element.css('left', Obj.pos.X);
+            Obj.$element.css('top', Obj.pos.Y);
+            this.moveChilds(Obj.child,x,y + 30);
+        }
+
+        findAllChildsWithThis() {
+            let blocks = [this];
+            let isEnd = false;
+            let child = this.child;
+            if(child == "") isEnd = true;
+            while(!isEnd) {
+                blocks.push(Vloke.playground.scripts.find(script => script.id == child));
+                child = Vloke.playground.scripts.find(script => script.id == child).child;
+                if(child == "") isEnd = true;
+            }
+            return blocks;
+        }
+
+        findAllChildsWithoutThis() {
+            let blocks = [];
+            let isEnd = false;
+            let child = this.child;
+            if(child == "") isEnd = true;
+            while(!isEnd) {
+                blocks.push(Vloke.playground.scripts.find(script => script.id == child));
+                child = Vloke.playground.scripts.find(script => script.id == child).child;
+                if(child == "") isEnd = true;
+            }
+            return blocks;
         }
     },
     Categorys: [
